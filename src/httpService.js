@@ -21,7 +21,7 @@ var HttpService = {
         return axios.get(ServerUrl+'all',Options)
     },
     deleteData: (id)=>{
-        return axios.delete(ServerUrl+'delete/'+IDBCursor,Options);
+        return axios.delete(ServerUrl+'delete/'+id,Options);
     }
 }
 export default HttpService;
