@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import HttpService from './httpService';
+import Alert from 'react-bootstrap/Alert';
 
 class App extends React.Component{
-
   constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +13,9 @@ class App extends React.Component{
           versionNo:'DEFAULT',
           allData:[],
           urlEntry: '',
+          showMsg: false,
+          msgFlag:'success',
+          postMsg:''
         }
     }
 componentDidMount(){
@@ -64,9 +67,20 @@ onSave = ()=>{
   HttpService.saveData(
     {name:this.state.templateName,url:this.state.urlEntry,version:this.state.versionNo})
     .then((res)=>{
+      this.setState({
+        showMsg: true,
+        msgFlag:'success',
+        postMsg:'Data added'
+      })
       this.initFunction();
       this.initializaVal();
-    },(error)=>{})
+    },(error)=>{
+      this.setState({
+        showMsg: true,
+        msgFlag:'danger',
+        postMsg:'Error Occured'
+      })
+    })
 }
 
 onDelete = (id)=>{
@@ -74,15 +88,33 @@ onDelete = (id)=>{
     res=>{
       this.initFunction();
       this.initializaVal();
+      this.setState({
+        showMsg: true,
+        msgFlag:'success',
+        postMsg:'Data deleted success'
+      });
+      window.scrollTo(0, 0);
     },error=>{
-
+      this.setState({
+        showMsg: true,
+        msgFlag:'danger',
+        postMsg:'Data deletion failed'
+      });
+      window.scrollTo(0, 0);
     }
   )
+}
+
+setShow = ()=>{
+  this.setState({showMsg:false})
 }
 
 render() {
   return (
     <div className="App container">
+    {this.state.showMsg? <Alert variant={this.state.msgFlag} dismissible onClick={this.setShow}>
+      <Alert.Heading>{this.state.postMsg}</Alert.Heading>
+    </Alert>:null}
       <div className="row form-group">
           <div className="col-md-4 col-sm-4">
             <div className="input-group mb-6">
